@@ -1,8 +1,7 @@
+This repository contains structured notes and exercises for learning *Robot Framework, Selenium & API* , organized into different sections for easy navigation.
+It also contains *Gen AI, Agentic AI and MCP notes*
+
 # Robot Framework Notes
-
-This repository contains structured notes and exercises for learning **Robot Framework, Selenium & API** , organized into different sections for easy navigation.
-It also contains **Gen AI, Agentic AI and MCP notes**
-
 ## Introduction
 - The basic introduction to Robot Framework is available in the **`notes`** folder.
 - Covers fundamentals, syntax, and initial setup.
