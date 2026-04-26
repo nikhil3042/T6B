@@ -1,0 +1,139 @@
+1. From leetcode
+Given an array of integers 'nums' and an integer 'target', return
+the indices of the two numbers that add up to 'target'.
+You may not use the same element twice.
+You can return the answer in any order.
+
+Example:
+  Input:  nums = [2, 7, 11, 15], target = 9
+  Output: [0, 1]
+  Explanation: nums[0] + nums[1] = 2 + 7 = 9
+
+
+2. From hacker rank
+You are climbing a staircase. It takes n steps to reach the top.
+Each time you can either climb 1 or 2 steps.
+In how many distinct ways can you climb to the top?
+
+Example:
+  Input:  n = 4
+  Output: 5
+  Explanation: 1+1+1+1, 1+1+2, 1+2+1, 2+1+1, 2+2
+
+
+3. from hacker rank
+You are given an integer array `coins` representing coin
+denominations and an integer `amount`.
+Return the fewest number of coins needed to make up that amount.
+If that amount cannot be made up, return -1.
+You may use each coin an unlimited number of times.
+
+Example:
+  Input:  coins = [1, 5, 6, 9], amount = 11
+  Output: 2
+  Explanation: 5 + 6 = 11
+
+4.
+inp = 5
+op= 
+[1, 2, 3, 4, 5, 26, 27, 28, 29, 30]
+[6, 7, 8, 9, 22, 23, 24, 25]
+[10, 11, 12, 19, 20, 21]
+[13, 14, 17, 18]
+[15, 16]
+
+
+5.
+Given an integer `n`, return a list of strings from 1 to n where:
+  - Multiples of 3 -> "Fizz"
+  - Multiples of 5 -> "Buzz"
+  - Multiples of both 3 and 5 -> "FizzBuzz"
+  - Otherwise -> the number as a string
+
+But also add a rule: multiples of 7 -> append "Jazz"
+(e.g. 21 is divisible by 3 and 7 -> "FizzJazz")
+
+Example:
+  Input:  n = 15
+  Output: ["1","2","Fizz","4","Buzz","Fizz","Jazz","8","Fizz",
+           "Buzz","11","Fizz","13","Jazz","FizzBuzz"]
+
+
+6.
+You have two jugs of capacity `a` litres and `b` litres.
+You have an unlimited water supply.
+You can fill, empty, or pour one jug into the other.
+
+Determine if it is possible to measure exactly `target` litres.
+
+Write a function:
+  can_measure(a, b, target) -> bool
+
+Example:
+  Input:  a=3, b=5, target=4
+  Output: True
+
+  Input:  a=2, b=6, target=5
+  Output: False
+
+  Hint: Use GCD
+
+
+7.
+Given a string `s`, reverse the order of the words.
+A word is defined as a sequence of non-space characters.
+The returned string should not have leading/trailing spaces,
+and words should be separated by a single space.
+
+Example:
+  Input:  s = "  the sky   is blue  "
+  Output: "blue is sky the"
+
+  Input:  s = "a good   example"
+  Output: "example good a"
+
+
+8.
+You have `n` candles. Each candle burns for exactly 1 hour.
+From every `k` burnt-out candles, you can make 1 new candle.
+How many total hours of light can you get?
+
+Write a function:
+  total_hours(n, k) -> int
+
+Example:
+  Input:  n=9, k=3
+  Output: 13
+  Explanation:
+    Burn 9 -> get 3 new, burn 3 -> get 1 new, burn 1 -> done
+    9 + 3 + 1 = 13 hours
+
+9.
+  Input:  nums = [1,2,3,4,5,6,7], k = 3
+  Output: [5,6,7,1,2,3,4]
+
+  Input:  nums = [-1,-100,3,99], k = 2
+  Output: [3,99,-1,-100]
+
+the k no of values are added on the first of list
+
+
+10. Snail in a Well 
+
+A snail is at the bottom of a well of depth `d` metres.
+Every day it climbs `up` metres, and every night it slips
+`down` metres. How many days does it take to escape the well?
+
+The snail escapes when it reaches or exceeds depth `d` during
+the day climb (it does not slip back on the final day).
+
+Write a function:
+  days_to_escape(d, up, down) -> int
+  Return -1 if the snail can never escape.
+
+Example:
+  Input:  d=10, up=3, down=2
+  Output: 8
+
+  Input:  d=10, up=2, down=2
+  Output: -1
