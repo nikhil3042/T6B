@@ -1,0 +1,16 @@
+{
+  "id": 99,
+  "category": {
+    "id": 99,
+    "name": "Dogs"
+  },
+  "name": "Bruno Updated",
+  "photoUrls": ["https://example.com/bruno.jpg"],
+  "tags": [
+    {
+      "id": 99,
+      "name": "cute"
+    }
+  ],
+  "status": "sold"
+}
