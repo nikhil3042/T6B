@@ -1,0 +1,128 @@
+pipeline {
+    agent any
+
+    environment {
+        REPORTS_DIR = "reports\\${new Date().format('yyyyMMdd')}"
+        VENV_DIR    = ".venv"
+    }
+
+    options {
+        // Keep last 10 builds only
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        // Timeout entire pipeline after 1 hour
+        timeout(time: 1, unit: 'HOURS')
+        // Add timestamps to console output
+        timestamps()
+    }
+
+    stages {
+
+        stage('Cleanup Old Reports') {
+            steps {
+                echo "Cleaning up old report folders older than 7 days..."
+                powershell '''
+                    $reportsRoot = "reports"
+                    if (Test-Path $reportsRoot) {
+                        Get-ChildItem -Path $reportsRoot -Directory |
+                        Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-7) } |
+                        ForEach-Object {
+                            Write-Host "Deleting old report: $($_.FullName)"
+                            Remove-Item $_.FullName -Recurse -Force
+                        }
+                    } else {
+                        Write-Host "No reports folder found, skipping cleanup."
+                    }
+                '''
+            }
+        }
+
+        stage('Setup Virtual Environment') {
+            steps {
+                echo "Checking if virtual environment exists..."
+                powershell '''
+                    if (Test-Path ".venv\\Scripts\\activate") {
+                        Write-Host "Virtual environment already exists, skipping creation."
+                    } else {
+                        Write-Host "Creating virtual environment..."
+                        python -m venv .venv
+                        if ($LASTEXITCODE -ne 0) {
+                            throw "Failed to create virtual environment!"
+                        }
+                        Write-Host "Virtual environment created successfully."
+                    }
+                '''
+            }
+        }
+
+        stage('Install / Update Requirements') {
+            steps {
+                echo "Installing requirements from requirements.txt..."
+                powershell '''
+                    .venv\\Scripts\\pip install --upgrade pip
+                    .venv\\Scripts\\pip install -r requirements.txt
+                    if ($LASTEXITCODE -ne 0) {
+                        throw "Failed to install requirements!"
+                    }
+                    Write-Host "Requirements installed successfully."
+                '''
+            }
+        }
+
+        stage('Run Robot Framework Tests') {
+            steps {
+                echo "Running Robot Framework test cases..."
+                powershell """
+                    \$reportDir = "${REPORTS_DIR}"
+                    New-Item -ItemType Directory -Force -Path \$reportDir | Out-Null
+                    .venv\\Scripts\\robot -d "\$reportDir" tests
+                    \$exitCode = \$LASTEXITCODE
+                    if (\$exitCode -eq 1) {
+                        throw "Robot Framework encountered a critical error!"
+                    }
+                    # Exit code 0 = all pass, non-zero = some failures (handled by post section)
+                    exit \$exitCode
+                """
+            }
+        }
+
+        stage('Generate RobotMetrics Report') {
+            steps {
+                echo "Generating RobotMetrics HTML report..."
+                powershell """
+                    .\\.venv\\Scripts\\python -m robotmetrics --inputpath "${REPORTS_DIR}"
+                    if (\$LASTEXITCODE -ne 0) {
+                        Write-Host "Warning: RobotMetrics report generation failed."
+                    } else {
+                        Write-Host "RobotMetrics report generated successfully."
+                    }
+                """
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Publishing Robot Framework report in Jenkins..."
+            robot(
+                outputPath: "${REPORTS_DIR}",
+                outputFileName: 'output.xml',
+                reportFileName: 'report.html',
+                logFileName: 'log.html',
+                passThreshold: 90,
+                unstableThreshold: 80
+            )
+        }
+        success {
+            echo '✅ Pipeline completed successfully! All tests passed.'
+        }
+        unstable {
+            echo '⚠️ Pipeline unstable! Some tests failed. Check the Robot report.'
+        }
+        failure {
+            echo '❌ Pipeline failed! Check console output for errors.'
+        }
+        cleanup {
+            echo "Pipeline finished. Workspace retained for report access."
+        }
+    }
+}
